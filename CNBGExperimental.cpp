@@ -1,7 +1,7 @@
 #include<iostream>
 #include<cstdlib> //contains rand( ) and srand( )
 #include<ctime> //contains time( )
-#include<conio.h> //contains getch( ) to clear the screen
+#include<conio.h> //contains getch( ) to wait for a key press
 using namespace std;
 
 class Betting
@@ -28,12 +28,19 @@ class Betting
 			cout<<"\nYour choice? ";
 			cin>>difficulty;
 			
-			if(difficulty!='1' && difficulty!='2' && difficulty!='3' && difficulty!='4')
+			switch (difficulty) 
 				{
-				system("cls"); //clears the screen
-        		cout<<"Invalid choice. Choice can be '1' through '4' only."<<endl;
+   			 	case '1': // do nothing if 1,2,3,4 is selected
+    		 	case '2':
+    			case '3':
+    			case '4':
+    			break;
+    			
+				default: //if input is invalid 
+        		system("cls");
+        		cout << "Invalid Input. Please enter '1', '2', '3', or '4' only." << endl;
         		goto option;
-        		}
+				}
 			
 			
 			while(difficulty!='4')
@@ -53,15 +60,15 @@ class Betting
 				
 				if(difficulty=='1')
 					{
-						guessCount=4;
+						guessCount=4; //gives 4 attempts
 					}
 				else if(difficulty=='2')
 					{
-						guessCount=8;
+						guessCount=8; //gives 8 attempts
 					}
 				else if(difficulty=='3')
 					{
-						guessCount=12;
+						guessCount=12; //gives 12 attempts
 					}
 				
 				switch(difficulty)
@@ -107,16 +114,62 @@ class Betting
 		{	
 			attempt=0;
 			IncorrectGuess:
-			while(guessCount>0) 
-			{
+			if(mode=='1') //mode=='1' is limited guesses mode
+					{
+						if(guessCount==1)
+							{
+							cout<<"\nLast attempt."<<endl;
+							}
+												//cout<<"guessCount "<<guessCount<<endl;
+						guessCount--;
+				
+						if(attempt==0)// if mode is limited guess mode and is the first attempt
+							{
+							system("cls");
+							switch(difficulty)
+								{
+							case '1':
+							cout<<"You have to guess it correctly in 4 attempts."<<endl;
+							cout<<"The number is between 0 - 50."<<endl;
+							break;
+							
+							case '2':
+							cout<<"You have to guess it correctly in 8 attempts."<<endl;
+							cout<<"The number is between 0 - 100."<<endl;
+							break;
+							
+							case '3':
+							cout<<"You have to guess it correctly in 12 attempts."<<endl;
+							cout<<"The number is between 0 - 150."<<endl;
+							break;
+								}
+							}
+					}	
+			
+			//		
+		//	int history;	
+		//	switch (guessCount) 
+				{
+   			 //	case 3: // do nothing if it is the first attempt
+    		 //	case 7:
+    		//	case 11:
+    		//	break;
+    			
+				//default: 
+        	//	cout<<"You have tried the numbers: "<<history<<" , "<<endl;
+				}
+				//	
+							
 			cout<<"\nWhat do you think is the number?\n>>";
-											cout<<num<<endl;
+										//	cout<<num<<endl;
 			cin>>userguess;
+			//history=userguess;
 			attempt++;
-						if(mode=='1') //mode=='1' is limited guesses mode
-							guessCount--;
-											cout<<"Attempt "<<attempt<<endl;
-											cout<<"guessCount "<<guessCount<<endl;
+						
+										//	cout<<"Attempt "<<attempt<<endl;
+										//	cout<<"guessCount "<<guessCount<<endl;
+			if(guessCount>0)
+			{
 				while(userguess!=num)
 				{
 					if(userguess<0 || userguess>range)
@@ -131,23 +184,33 @@ class Betting
 					}
 					else if(userguess<num)
 					{
-					cout<<"The number is larger than "<<userguess<<". Try again."<<endl;
+						cout<<"The number is larger than "<<userguess<<". Try again."<<endl;
 						goto IncorrectGuess;
 					}
 				}
-			system("cls");
-			cout<<"WOW! Congratulations! You guessed correct!\n\nThe number was "<<num<<". You guessed it in "<<attempt<<" attempts."<<endl;
+				CorrectGuess:
+				system("cls");
+				cout<<"WOW! Congratulations! You guessed correct!\n\nThe number was "<<num<<". You guessed it in "<<attempt<<" attempts."<<endl;
+				goto replay;
 			}
-			
-			if(guessCount==0)
+			else if(mode=='1')
 			{
-			system("cls");
-			cout<<"OH NO! You ran out of attempts. Better luck next time!"<<endl;
+			 	if(userguess!=num) 
+				{
+			 	system("cls");
+				cout<<"OH NO! You ran out of attempts. Better luck next time!"<<endl;
+				cout<<"The number was "<<num<<"."<<endl;
+				goto replay;
+				}
+				else
+				goto CorrectGuess;
 			}
 			
+			
+			replay:		
 			cout<<"\nWould you like to play again?\nPress 'y' to play again or press any other key to exit.\n";
-		
 			restart = getch(); // getch() waits for any key to be pressed. If pressed, it does not display the pressed key. 
+			system("cls");
 			if(restart=='y' || restart=='Y')
 			{
 				menu();
@@ -159,11 +222,12 @@ class Betting
 				restart = getch();
 				if(restart=='y' || restart=='Y')
 				{
-				exit(0);
+					exit(0); //instead of exiting, program flow has to return to original 4 games main menu.
 				}
 				else
 				{
-				menu();
+					system("cls");
+					menu();
 				}
 			}
 		}
