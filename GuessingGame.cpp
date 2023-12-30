@@ -177,7 +177,7 @@ class GuessingGame
 
 			while(user_Guess!=num && max_Attempts_Allowed>0) 
 			{ 
-				cout<<"\nWhat do you think is the number?"<<"Num =" <<num<<"\n>>";	
+				cout<<"\nWhat do you think is the number?\n"<<">>";	
 				cin>>user_Guess;
 				system("cls");
 				
